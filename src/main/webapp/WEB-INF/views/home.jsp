@@ -1,92 +1,76 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page session="false" %>
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page session="false"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <!Doctype html>
 <html>
 <head>
 <meta charset="UTF-8">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/bignumber.min.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/lib/web3-light.js"></script>	<!-- RPC 통신을 위한 js -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/board.css">
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/lib/bignumber.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/lib/web3-light.js"></script>
+<!-- RPC 통신을 위한 js -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-   
-    var Web3 = require('web3');
-    var web3 = new Web3();
-    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));	//서버 IP 주소 입력
+	var Web3 = require('web3');
+	var web3 = new Web3();
+	web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545")); //서버 IP 주소 입력
 	// 잔고를 출력합니다.
-    function refreshBalance() { 
-		// tablePlace를 초기화하고 계좌수 만큼 테이블의 행을 생성합니다.
-		document.getElementById("tablePlace").innerText = " ";
-		var idiv = document.createElement('div');
-		document.getElementById("tablePlace").appendChild(idiv);
-		var list = web3.eth.accounts;	//웹 클라이언트에서 노드와 연결하기 위해 web3 사용
-		var total = 0;
-		var input ="<table>";
-		for(var i = 0; i<list.length; i++){
-			var tempB= parseFloat(web3.fromWei(web3.eth.getBalance(list[i]),"ether"));
-			input +="<tr><td>"+ list[i] + "</td><td>" + tempB +" ETHER</td></tr>";
-			total+=tempB;
-		}
-		input +="<tr><td><strong> TOTAL </strong></td><td><strong>" + total +" ETHER</strong></td></tr></table>";
-		idiv.innerHTML = input;	
-		web3.eth.filter('latest').watch(function() { refreshBalance();});
-	}
-	// 사용자의 계좌들을 select로 만듭니다.
-	function makeSelect() { 
-		var list = web3.eth.accounts;
-		var select =  document.getElementById('accounts');
-		for(var i = 0; i<list.length; i++){
-			var opt=document.createElement('option');
-			opt.value = list[i];
-			opt.innerHTML = list[i];
-			select.appendChild(opt);
-		}
-	}
-	function send(){ 
-	var address = document.getElementById('accounts').value;
-	var toAddress = document.getElementById('toaddr').value;
-	var amount = web3.toWei(document.getElementById('amount').value,"ether");
-	//web3.eth.defaultAccount = address;
-	if(web3.personal.unlockAccount(address,document.getElementById('pass').value)){
-		web3.eth.sendTransaction({from: address, to:toAddress, value:amount},function(err,result){
-			if(!err)
-				console.log('Transaction is sent Successful!('+result+')');
-			else
-				console.log(err);
-		});}
-	}
 </script>
-<style>
-table {    border-collapse: collapse;    border: 4px solid #bbb;	width: 100%;}
-tr:nth-child(even){background-color: #ccc}
-td, h1 {	padding: 8px;    text-align: left;}
-input, select {
-    padding: 6px 10px;
-    margin: 4px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    box-sizing: border-box;
-}
-button:hover {  background-color: gold;}
-</style>
 </head>
 
 <body>
-    <h1>ETHER Wallet</h1>
-	<div id="tablePlace"></div>
-	<h4>송신처  <select id="accounts"></select> </h4>
-	<h4>수신처  <input type="text" id="toaddr" size="40" value=""></h4>
-    <h4>금액  <input id="amount" type="number"/> ETHER</h4>
-	<h4>password <input id="pass" type="password"/>
-	<button onClick="javascript:send()">Send</button></h4>
-	<script>
-	refreshBalance();
-	makeSelect();
-	</script>
-	
-	<div>
-		
+
+	<div class="container-fluid">
+		<div class="row header">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8 headercenter">
+				<form>
+					<input type="text" name="id" placeholder="아이디" size="12"> <input
+						type="text" name="password" placeholder="패스워드" size="12">
+					<input type="submit" value="로그인">
+				</form>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
+		<div class="row main">
+			<div class="col-sm-2"></div>
+			<div class="col-sm-8">
+				<br>
+				<br>
+				<br>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>음원명</th>
+							<th>작성자</th>
+							<th>용량</th>
+							<th>작성일</th>
+							<th>좋아요</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td><button>좋아요</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-2"></div>
+		</div>
 	</div>
 </body>
 </html>
